@@ -12,6 +12,7 @@ import type { InjectFace, PropsLocale, PropsRuntime } from '@deepseek-ai/dsh-cli
 import type {
   ComfyGenerateRequest,
   ComfyGeneration,
+  ComfyDeleteImagesResult,
   ComfyImageReference,
   ComfyImagesStatus,
   ComfyLibraryPage,
@@ -25,6 +26,26 @@ const SIZES = [
   { label: 'composer.sizeLandscape', width: 1216, height: 832 },
   { label: 'composer.sizePortrait', width: 832, height: 1216 },
 ] as const
+
+const BATCH_LIMIT = 100
+const COMFY_MEDIA_ROUTE = 'api/comfyui-media'
+const COMFY_ARCHIVE_ROUTE = 'api/comfyui-archive'
+
+function mediaKey(image: ComfyImageReference): string {
+  return `${image.subfolder}\0${image.filename}`
+}
+
+function mediaUrl(image: ComfyImageReference): string {
+  return `${COMFY_MEDIA_ROUTE}?${new URLSearchParams({ filename: image.filename, subfolder: image.subfolder })}`
+}
+
+function archiveUrl(images: readonly ComfyImageReference[]): string {
+  return `${COMFY_ARCHIVE_ROUTE}?${new URLSearchParams({ files: JSON.stringify(images) })}`
+}
+
+function isVideo(image: ComfyImageReference): boolean {
+  return /\.(mp4|webm|mov|mkv)$/iu.test(image.filename)
+}
 
 interface Draft {
   readonly prompt: string
@@ -55,6 +76,7 @@ export interface ImagesInjected {
   readonly cancel: (promptId: string) => Promise<void>
   readonly remove: (promptId: string) => Promise<void>
   readonly removeImage: (image: ComfyImageReference) => Promise<void>
+  readonly removeImages: (images: readonly ComfyImageReference[]) => Promise<ComfyDeleteImagesResult>
   readonly image: (image: ComfyImageReference) => Promise<string>
 }
 
@@ -64,18 +86,21 @@ function errorMessage(error: unknown, fallback: string): string {
   return error instanceof Error ? error.message : fallback
 }
 
-function ImageCard({ generation, stored, image, deleting, load, onDelete, onReuse, onEdit, t }: {
+function ImageCard({ generation, stored, image, deleting, selecting, selected, onSelect, load, onDelete, onReuse, onEdit, t }: {
   readonly generation?: ComfyGeneration
   readonly stored?: ComfyStoredImage
   readonly image: ComfyImageReference
   readonly deleting: boolean
+  readonly selecting?: boolean
+  readonly selected?: boolean
+  readonly onSelect?: (shift: boolean) => void
   readonly load: ImagesInjected['image']
   readonly onDelete: () => Promise<boolean>
   readonly onReuse?: (generation: ComfyGeneration) => void
   readonly onEdit: (image: ComfyImageReference, generation: ComfyGeneration | undefined, src: string) => void
   readonly t: ImagesPanelProps['t']
 }): ReactNode {
-  const [src, setSrc] = useState<string>()
+  const [remoteSrc, setRemoteSrc] = useState<string>()
   const [failed, setFailed] = useState(false)
   const [open, setOpen] = useState(false)
   const [confirming, setConfirming] = useState(false)
@@ -92,48 +117,57 @@ function ImageCard({ generation, stored, image, deleting, load, onDelete, onReus
     return () => { observer.disconnect() }
   }, [])
   useEffect(() => {
-    if (!visible) return undefined
+    if (!visible || stored !== undefined) return undefined
     const controller = new AbortController()
     void load(image).then((value) => {
-      if (!controller.signal.aborted) setSrc(value)
+      if (!controller.signal.aborted) setRemoteSrc(value)
     }).catch(() => {
       if (!controller.signal.aborted) setFailed(true)
     })
     return () => { controller.abort() }
-  }, [image, load, visible])
+  }, [image, load, stored, visible])
+  const src = stored === undefined ? remoteSrc : visible ? mediaUrl(image) : undefined
+  const video = stored !== undefined && isVideo(image)
   return (
-    <article ref={cardRef} className={css.card}>
-      <button
-        type="button"
-        className={css.preview}
-        disabled={src === undefined}
-        aria-label={t('gallery.open', { name: image.filename })}
-        onClick={() => { setOpen(true) }}
-      >
-        {src !== undefined
-          ? <img src={src} alt={generation?.prompt ?? image.filename} />
-          : <span className={failed ? css.failed : css.loading}>{failed ? t('gallery.failed') : t('gallery.loading')}</span>}
-      </button>
+    <article ref={cardRef} className={`${css.card} ${selected ? css.cardSelected : ''}`}>
+      <div className={css.previewFrame}>
+        {video
+          ? <video className={css.video} src={src} controls={!selecting} preload="metadata" playsInline />
+          : <button
+              type="button" className={css.preview} disabled={src === undefined && !selecting}
+              aria-label={selecting ? t('selection.toggle', { name: image.filename }) : t('gallery.open', { name: image.filename })}
+              onClick={(event) => { if (selecting) onSelect?.(event.shiftKey); else setOpen(true) }}
+            >
+              {src !== undefined
+                ? <img src={src} alt={generation?.prompt ?? image.filename} loading="lazy" onError={() => { setFailed(true) }} />
+                : <span className={failed ? css.failed : css.loading}>{failed ? t('gallery.failed') : t('gallery.loading')}</span>}
+            </button>}
+        {selecting && <button type="button" className={`${css.selectionControl} ${video ? css.videoSelection : ''}`} aria-pressed={selected}
+          aria-label={t('selection.toggle', { name: image.filename })}
+          onClick={(event) => { onSelect?.(event.shiftKey) }}>
+          <span className={css.selectionCheck} aria-hidden="true">{selected ? '✓' : ''}</span>
+        </button>}
+      </div>
       <div className={css.cardBody}>
-        <p className={css.workflow}>{generation === undefined ? t('gallery.localFile') : t('gallery.workflow', { workflow: generation.workflowLabel })}</p>
+        <p className={css.workflow}>{generation === undefined ? t(video ? 'gallery.localVideo' : 'gallery.localFile') : t('gallery.workflow', { workflow: generation.workflowLabel })}</p>
         <p className={css.prompt}>{generation?.prompt ?? image.filename}</p>
         <p className={css.meta}>{generation === undefined
           ? t('gallery.fileMeta', { date: new Date(stored?.modifiedAt ?? 0).toLocaleDateString(), size: Math.round((stored?.bytes ?? 0) / 1024) })
           : t('gallery.runMeta', { width: generation.width, height: generation.height, steps: generation.steps, seed: generation.seed })}</p>
-        <div className={css.cardActions}>
+        {!selecting && <div className={css.cardActions}>
           {generation !== undefined && onReuse !== undefined && <Button size="sm" onClick={() => { onReuse(generation) }}>{t('action.reuse')}</Button>}
-          {src !== undefined && <Button size="sm" onClick={() => { onEdit(image, generation, src) }}>{t('action.editImage')}</Button>}
+          {src !== undefined && !video && <Button size="sm" onClick={() => { onEdit(image, generation, src) }}>{t('action.editImage')}</Button>}
           {src !== undefined && (
-            <a className={css.download} href={src} download={image.filename}>
+            <a className={css.download} href={stored === undefined ? src : mediaUrl(image)} download={image.filename}>
               <IconDownloadOutlineRegular size={14} />{t('action.download')}
             </a>
           )}
           <Button className={css.deleteButton} size="sm" disabled={deleting} onClick={() => { setConfirming(true) }}>
             <IconTrashOutlineRegular size={14} />{t(deleting ? 'delete.pending' : 'action.delete')}
           </Button>
-        </div>
+        </div>}
       </div>
-      {open && src !== undefined && (
+      {open && src !== undefined && !video && (
         <ImageLightbox
           src={src}
           alt={generation?.prompt ?? image.filename}
@@ -169,6 +203,7 @@ export function ImagesPanel({
   cancel: cancelGeneration,
   remove: removeGeneration,
   removeImage,
+  removeImages,
   image: readImage,
   t,
 }: ImagesPanelProps): ReactNode {
@@ -183,6 +218,12 @@ export function ImagesPanel({
   const [error, setError] = useState<string>()
   const [busy, setBusy] = useState(false)
   const [deleting, setDeleting] = useState<readonly string[]>([])
+  const [selectionMode, setSelectionMode] = useState(false)
+  const [selectedKeys, setSelectedKeys] = useState<readonly string[]>([])
+  const [selectionError, setSelectionError] = useState<string>()
+  const [bulkBusy, setBulkBusy] = useState(false)
+  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false)
+  const selectionAnchor = useRef<number | null>(null)
 
   const refresh = useCallback(async (): Promise<void> => {
     try {
@@ -240,6 +281,71 @@ export function ImagesPanel({
   const selectedWorkflow = status?.workflows.find(workflow => workflow.id === draft.workflow)
   const canGenerate = status?.reachable === true && selectedWorkflow?.available === true && draft.prompt.trim() !== '' && !busy
   const selectedModel = status?.models.find(model => model.id === (selectedWorkflow?.source === 'saved' ? selectedWorkflow.modelId : draft.model))
+  const selectedSet = new Set(selectedKeys)
+  const selectedMedia = library.images.filter(item => selectedSet.has(mediaKey(item.image))).map(item => item.image)
+
+  const toggleSelection = (index: number, shift: boolean): void => {
+    const key = mediaKey(library.images[index]!.image)
+    if (selectedKeys.length >= BATCH_LIMIT && !selectedSet.has(key) && !shift) {
+      setSelectionError(t('selection.limit'))
+      return
+    }
+    setSelectionError(undefined)
+    setSelectedKeys(current => {
+      const next = new Set(current)
+      if (shift && selectionAnchor.current !== null) {
+        const first = Math.min(index, selectionAnchor.current)
+        const last = Math.max(index, selectionAnchor.current)
+        for (const item of library.images.slice(first, last + 1)) {
+          if (next.size >= BATCH_LIMIT) break
+          next.add(mediaKey(item.image))
+        }
+      } else if (next.has(key)) next.delete(key)
+      else if (next.size < BATCH_LIMIT) next.add(key)
+      return [...next]
+    })
+    selectionAnchor.current = index
+  }
+
+  const downloadSelected = async (): Promise<void> => {
+    if (selectedMedia.length === 0) return
+    setBulkBusy(true)
+    setSelectionError(undefined)
+    try {
+      const url = archiveUrl(selectedMedia)
+      const response = await fetch(url, { method: 'HEAD' })
+      if (!response.ok) throw new Error(await response.text())
+      const anchor = document.createElement('a')
+      anchor.href = url
+      anchor.download = 'aryaai-media.zip'
+      anchor.click()
+    } catch (reason) {
+      setSelectionError(errorMessage(reason, t('notice.failed')))
+    } finally {
+      setBulkBusy(false)
+    }
+  }
+
+  const deleteSelected = async (): Promise<void> => {
+    if (selectedMedia.length === 0) return
+    setBulkBusy(true)
+    setSelectionError(undefined)
+    try {
+      const result = await removeImages(selectedMedia)
+      const deletedKeys = new Set(result.deleted.map(mediaKey))
+      setLibrary(current => ({
+        images: current.images.filter(item => !deletedKeys.has(mediaKey(item.image))),
+        total: current.total - result.deleted.length,
+      }))
+      setSelectedKeys(current => current.filter(key => !deletedKeys.has(key)))
+      setBulkDeleteOpen(false)
+      if (result.failed.length > 0) setSelectionError(t('selection.deleteFailed', { count: result.failed.length }))
+    } catch (reason) {
+      setSelectionError(errorMessage(reason, t('notice.failed')))
+    } finally {
+      setBulkBusy(false)
+    }
+  }
 
   const generate = async (): Promise<void> => {
     setBusy(true)
@@ -315,7 +421,9 @@ export function ImagesPanel({
     setDeleting(current => [...current, image.filename])
     try {
       await removeImage(image)
-      setLibrary(current => ({ images: current.images.filter(item => item.image.filename !== image.filename || item.image.subfolder !== image.subfolder), total: current.total - 1 }))
+      const key = mediaKey(image)
+      setLibrary(current => ({ images: current.images.filter(item => mediaKey(item.image) !== key), total: current.total - 1 }))
+      setSelectedKeys(current => current.filter(item => item !== key))
       return true
     } catch (reason) {
       setError(errorMessage(reason, t('notice.failed')))
@@ -462,19 +570,46 @@ export function ImagesPanel({
             <h2>{t('gallery.title')}</h2>
             <p>{t('gallery.count', { count: library.total })}</p>
           </div>
-          <div className={css.galleryTabs} role="tablist" aria-label={t('gallery.title')}>
-            <Button size="sm" aria-selected={galleryView === 'library'} role="tab" onClick={() => { setGalleryView('library') }}>{t('gallery.library')}</Button>
-            <Button size="sm" aria-selected={galleryView === 'recent'} role="tab" onClick={() => { setGalleryView('recent') }}>{t('gallery.recent')}</Button>
+          <div className={css.galleryHeaderActions}>
+            {galleryView === 'library' && library.images.length > 0 && <Button size="sm" onClick={() => {
+              setSelectionMode(current => !current)
+              setSelectedKeys([])
+              setSelectionError(undefined)
+              selectionAnchor.current = null
+            }}>{t(selectionMode ? 'selection.done' : 'selection.start')}</Button>}
+            <div className={css.galleryTabs} role="tablist" aria-label={t('gallery.title')}>
+              <Button size="sm" aria-selected={galleryView === 'library'} role="tab" onClick={() => { setGalleryView('library') }}>{t('gallery.library')}</Button>
+              <Button size="sm" aria-selected={galleryView === 'recent'} role="tab" onClick={() => { setGalleryView('recent'); setSelectionMode(false); setSelectedKeys([]) }}>{t('gallery.recent')}</Button>
+            </div>
           </div>
         </div>
+        {galleryView === 'library' && selectionMode && <div className={css.selectionBar}>
+          <strong>{t('selection.count', { count: selectedMedia.length })}</strong>
+          <span>{t('selection.hint')}</span>
+          <Button size="sm" disabled={bulkBusy} onClick={() => {
+            setSelectedKeys(library.images.slice(0, BATCH_LIMIT).map(item => mediaKey(item.image)))
+            setSelectionError(library.images.length > BATCH_LIMIT ? t('selection.limit') : undefined)
+          }}>{t('selection.selectLoaded')}</Button>
+          <Button size="sm" disabled={bulkBusy || selectedMedia.length === 0} onClick={() => { setSelectedKeys([]); selectionAnchor.current = null }}>{t('selection.clear')}</Button>
+          <Button size="sm" disabled={bulkBusy || selectedMedia.length === 0} onClick={() => { void downloadSelected() }}>
+            <IconDownloadOutlineRegular size={14} />{t('selection.download')}
+          </Button>
+          <Button size="sm" className={css.deleteButton} disabled={bulkBusy || selectedMedia.length === 0}
+            onClick={() => { setBulkDeleteOpen(true) }}>
+            <IconTrashOutlineRegular size={14} />{t('selection.delete')}
+          </Button>
+        </div>}
+        {galleryView === 'library' && selectionError !== undefined && <p className={css.selectionError} role="alert">{selectionError}</p>}
         {galleryView === 'library' ? (
           status?.libraryAvailable !== true
             ? <p className={css.empty}>{t('gallery.unconfigured')}</p>
             : <>
               {library.images.length === 0 && <p className={css.empty}>{libraryLoading ? t('gallery.loading') : t('gallery.emptyLibrary')}</p>}
-              <div className={css.grid}>{library.images.map(stored => (
+              <div className={css.grid}>{library.images.map((stored, index) => (
                 <ImageCard key={`${stored.image.subfolder}:${stored.image.filename}`} stored={stored} image={stored.image}
                   deleting={deleting.includes(stored.image.filename)} load={readImage}
+                  selecting={selectionMode} selected={selectedSet.has(mediaKey(stored.image))}
+                  onSelect={shift => { toggleSelection(index, shift) }}
                   onDelete={() => deleteLocalImage(stored.image)} onEdit={editImage} t={t} />
               ))}</div>
               {library.images.length < library.total && <Button size="sm" disabled={libraryLoading} onClick={() => { void loadMore() }}>{t('gallery.loadMore')}</Button>}
@@ -495,6 +630,15 @@ export function ImagesPanel({
             />
           )))}</div>}
       </section>
+      <Modal open={bulkDeleteOpen} title={t('selection.confirmTitle', { count: selectedMedia.length })}
+        description={t('selection.confirmDescription', { count: selectedMedia.length })}
+        closeLabel={t('delete.close')} onClose={() => { if (!bulkBusy) setBulkDeleteOpen(false) }}
+        footer={<div className={css.confirmActions}>
+          <Button variant="outline" disabled={bulkBusy} onClick={() => { setBulkDeleteOpen(false) }}>{t('delete.cancel')}</Button>
+          <Button className={css.deleteButton} disabled={bulkBusy} onClick={() => { void deleteSelected() }}>
+            <IconTrashOutlineRegular size={14} />{t(bulkBusy ? 'delete.pending' : 'selection.confirmDelete')}
+          </Button>
+        </div>} />
     </main>
   )
 }

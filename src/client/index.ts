@@ -37,6 +37,7 @@ export function apply(ctx: ClientContext): void {
     cancel: async (promptId: string) => { await unwrap(ctx.remote.comfyImages.cancel({ promptId })) },
     remove: async (promptId: string) => { await unwrap(ctx.remote.comfyImages.deleteGeneration({ promptId })) },
     removeImage: async (image: ComfyImageReference) => { await unwrap(ctx.remote.comfyImages.deleteImage(image)) },
+    removeImages: images => unwrap(ctx.remote.comfyImages.deleteImages({ images })),
     image: async (image: ComfyImageReference) => {
       const value = await unwrap(ctx.remote.comfyImages.image(image))
       return `data:${value.contentType};base64,${value.base64}`

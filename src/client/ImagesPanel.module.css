@@ -126,17 +126,34 @@
 .gallery { max-width: 1200px; margin: 0 auto; }
 .gallery h2 { margin: 0 0 14px; font-size: 16px; font-weight: 500; line-height: 24px; }
 .galleryHeader { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; margin-bottom: 14px; }
+.galleryHeaderActions { display: flex; align-items: center; gap: 10px; }
 .galleryHeader h2 { margin-bottom: 2px; }
 .galleryHeader p { margin: 0; color: var(--dsw-alias-label-secondary); font-size: 13px; }
 .galleryTabs { display: flex; gap: 4px; padding: 3px; border: 0.5px solid var(--dsw-alias-border-l2); border-radius: var(--dsw-radius-lg); background: var(--dsw-alias-bg-layer-1); }
 .galleryTabs [aria-selected='true'] { color: var(--dsw-alias-label-primary); background: var(--dsw-alias-bg-layer-3); }
+.selectionBar { position: sticky; top: 0; z-index: 4; display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin: 0 0 14px; padding: 10px 12px; border: 0.5px solid var(--dsw-alias-border-l2); border-radius: var(--dsw-radius-lg); background: var(--dsw-alias-bg-layer-1); box-shadow: var(--dsw-shadow-sm); }
+.selectionBar strong { font-size: 13px; font-weight: 500; white-space: nowrap; }
+.selectionBar span { flex: 1; color: var(--dsw-alias-label-secondary); font-size: 12px; white-space: nowrap; }
+.selectionBar button { display: inline-flex; align-items: center; gap: 5px; }
+.selectionError { margin: 0 0 12px; color: var(--dsw-alias-state-error-primary); font-size: 13px; }
 .gallery > button { display: block; margin: 18px auto 0; }
 .empty { margin: 0; color: var(--dsw-alias-label-tertiary); font-size: 13px; }
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
 .card { content-visibility: auto; contain-intrinsic-size: 320px 420px; overflow: hidden; border: 0.5px solid var(--dsw-alias-border-l2); border-radius: var(--dsw-radius-xl); background: var(--dsw-alias-bg-layer-1); }
+.cardSelected { border-color: var(--dsw-alias-state-business-primary); box-shadow: 0 0 0 1px var(--dsw-alias-state-business-primary); }
+.previewFrame { position: relative; aspect-ratio: 1; background: var(--dsw-alias-bg-layer-2); }
 .preview { display: grid; place-items: center; width: 100%; aspect-ratio: 1; padding: 0; border: 0; background: var(--dsw-alias-bg-layer-2); cursor: zoom-in; }
 .preview:disabled { cursor: default; }
 .preview img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.video { display: block; width: 100%; height: 100%; object-fit: contain; }
+.selectionControl { position: absolute; top: 9px; left: 9px; display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: 0.5px solid var(--dsw-alias-border-l2); border-radius: var(--dsw-radius-md); background: var(--dsw-alias-bg-layer-1); cursor: pointer; }
+.videoSelection { inset: 0; width: 100%; height: 100%; place-items: start; padding: 9px; border: 0; border-radius: 0; background: transparent; }
+.videoSelection .selectionCheck { display: grid; place-items: center; width: 28px; height: 28px; border: 0.5px solid var(--dsw-alias-border-l2); border-radius: var(--dsw-radius-md); background: var(--dsw-alias-bg-layer-1); }
+.videoSelection[aria-pressed='true'] { background: transparent; }
+.videoSelection[aria-pressed='true'] .selectionCheck { border-color: var(--dsw-alias-state-business-primary); background: var(--dsw-alias-state-business-primary); color: var(--dsw-alias-bg-base); }
+.selectionControl[aria-pressed='true'] { border-color: var(--dsw-alias-state-business-primary); background: var(--dsw-alias-state-business-primary); color: var(--dsw-alias-bg-base); }
+.selectionCheck { font-size: 16px; line-height: 1; }
+.selectionControl:focus-visible, .preview:focus-visible { outline: 2px solid var(--dsw-alias-state-business-primary); outline-offset: -2px; }
 .loading,
 .failed { padding: 20px; color: var(--dsw-alias-label-tertiary); font-size: 12px; }
 .failed { color: var(--dsw-alias-state-error-primary); }
@@ -160,4 +177,6 @@
   .controls button { width: 100%; }
   .grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
   .galleryHeader { align-items: flex-start; flex-direction: column; }
+  .galleryHeaderActions { width: 100%; justify-content: space-between; }
+  .selectionBar span { flex-basis: 100%; order: 2; }
 }
