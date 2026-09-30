@@ -1,9 +1,9 @@
 {
   "name": "@deepseek-ai/dsh-client-ui-images",
-  "description": "AryaAI's built-in ComfyUI image generator and local gallery",
+  "description": "AryaAI ComfyUI image generator and local gallery plugin",
   "version": "0.1.7-rc.2",
   "publishConfig": { "access": "public" },
-  "repository": { "type": "git", "url": "git+https://github.com/KonnectSuite/AryaAI.git", "directory": "packages/client/ui-images" },
+  "repository": { "type": "git", "url": "git+https://github.com/KonnectSuite/dsh-client-ui-images.git" },
   "type": "module",
   "main": "lib/index.js",
   "types": "lib/types/index.d.ts",

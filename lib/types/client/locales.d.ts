@@ -5,6 +5,8 @@ export declare const zh: {
     readonly 'panel.label': "图像";
     readonly 'page.title': "图像";
     readonly 'composer.placeholder': "描述要创建的图像";
+    readonly 'composer.title': "创建图像";
+    readonly 'composer.hint': "选择工作流可加载其起始提示词与画布设置，然后按需修改。";
     readonly 'composer.negative': "不希望图像中出现的内容";
     readonly 'composer.negativeUnsupported': "此工作流在提示词强度 1 时不使用负面提示词";
     readonly 'composer.generate': "生成";
@@ -12,7 +14,14 @@ export declare const zh: {
     readonly 'composer.model': "模型";
     readonly 'composer.workflow': "工作流";
     readonly 'composer.usingModel': "使用 {model}";
+    readonly 'composer.usingWorkflow': "工作流：{workflow} · 模型：{model}";
+    readonly 'composer.sourceImage': "参考图像";
+    readonly 'composer.denoise': "变化强度";
     readonly 'composer.size': "尺寸";
+    readonly 'composer.sizeSquare': "正方形 · 1024";
+    readonly 'composer.sizeLandscape': "横向 · 1216 × 832";
+    readonly 'composer.sizePortrait': "纵向 · 832 × 1216";
+    readonly 'composer.sourceSize': "使用原图尺寸";
     readonly 'composer.steps': "步数";
     readonly 'composer.cfg': "提示词强度";
     readonly 'composer.seed': "种子";
@@ -27,14 +36,26 @@ export declare const zh: {
     readonly 'action.cancel': "取消";
     readonly 'action.download': "下载";
     readonly 'action.reuse': "复用设置";
+    readonly 'action.editImage': "编辑图像";
+    readonly 'action.clearSource': "移除图像";
     readonly 'action.delete': "删除";
     readonly 'delete.title': "删除图像？";
     readonly 'delete.description': "这将从最近生成中删除此图像以及同一次生成的其他图像。";
+    readonly 'delete.fileDescription': "这将永久删除 ComfyUI 输出文件夹中的图像。";
     readonly 'delete.cancel': "取消";
     readonly 'delete.confirm': "删除图像";
     readonly 'delete.close': "关闭删除确认";
     readonly 'delete.pending': "正在删除…";
-    readonly 'gallery.title': "最近生成";
+    readonly 'gallery.title': "图像图库";
+    readonly 'gallery.library': "本地图像";
+    readonly 'gallery.recent': "最近生成";
+    readonly 'gallery.count': "本地保存 {count} 张图像";
+    readonly 'gallery.localFile': "本地文件";
+    readonly 'gallery.fileMeta': "{date} · {size} KB";
+    readonly 'gallery.runMeta': "{width} × {height} · {steps} 步 · 种子 {seed}";
+    readonly 'gallery.unconfigured': "设置 ComfyUI 输出目录以浏览已保存的图像。";
+    readonly 'gallery.emptyLibrary': "输出目录中还没有图像。";
+    readonly 'gallery.loadMore': "加载更多";
     readonly 'gallery.workflow': "工作流：{workflow}";
     readonly 'gallery.empty': "生成的图像会显示在这里。";
     readonly 'gallery.loading': "正在加载图像…";
@@ -48,5 +69,6 @@ export declare const zh: {
 };
 /** English dictionary, key-identical to the Chinese source of truth. */
 export declare const en: Record<ImagesKey, string>;
+/** Locale keys owned by the Images plugin. */
 export type ImagesKey = keyof typeof zh;
 //# sourceMappingURL=locales.d.ts.map

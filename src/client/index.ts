@@ -32,9 +32,11 @@ export function apply(ctx: ClientContext): void {
   const face: ImagesInjected = {
     status: () => unwrap(ctx.remote.comfyImages.status()),
     history: () => unwrap(ctx.remote.comfyImages.history({ limit: 40 })),
+    library: (offset: number) => unwrap(ctx.remote.comfyImages.library({ offset, limit: 40 })),
     generate: (request: ComfyGenerateRequest) => unwrap(ctx.remote.comfyImages.generate(request)),
     cancel: async (promptId: string) => { await unwrap(ctx.remote.comfyImages.cancel({ promptId })) },
     remove: async (promptId: string) => { await unwrap(ctx.remote.comfyImages.deleteGeneration({ promptId })) },
+    removeImage: async (image: ComfyImageReference) => { await unwrap(ctx.remote.comfyImages.deleteImage(image)) },
     image: async (image: ComfyImageReference) => {
       const value = await unwrap(ctx.remote.comfyImages.image(image))
       return `data:${value.contentType};base64,${value.base64}`
