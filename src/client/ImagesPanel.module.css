@@ -1,7 +1,9 @@
 .panel {
+  box-sizing: border-box;
   overflow-y: auto;
   height: 100%;
-  padding: 28px clamp(20px, 4vw, 64px) 48px;
+  padding: 28px clamp(14px, 4%, 64px) 48px;
+  container: images / inline-size;
   color: var(--dsw-alias-label-primary);
   background: var(--dsw-alias-bg-base);
 }
@@ -23,7 +25,7 @@
 .header h1 { margin: 0; font-size: 24px; font-weight: 500; line-height: 32px; }
 .header p { margin: 3px 0 0; font-size: 13px; line-height: 20px; }
 .connected { color: var(--dsw-alias-state-success-primary); }
-.offline { color: var(--dsw-alias-state-warning-primary); }
+.offline { color: var(--dsw-alias-state-warn-primary); }
 .headerActions { gap: 8px; }
 
 .openComfy,
@@ -48,8 +50,44 @@
   border: 0.5px solid var(--dsw-alias-border-l2);
   border-radius: var(--dsw-radius-xl);
   background: var(--dsw-alias-bg-layer-1);
-  box-shadow: var(--dsw-shadow-sm);
 }
+
+.modeBar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; max-width: 1200px; margin: 0 auto 16px; }
+.roomLayout { display: flex; flex-direction: column; gap: 32px; max-width: 1200px; margin: auto; }
+.creationArea { min-width: 0; }
+.roomLayout .gallery { width: 100%; min-width: 0; margin: 0; padding-top: 24px; border-top: 0.5px solid var(--dsw-alias-border-l2); }
+.roomLayout .grid { grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 16px; }
+.roomLayout .galleryHeader { flex-wrap: wrap; gap: 10px; }
+.roomLayout .galleryHeaderActions { flex-wrap: wrap; }
+.roomLayout .autoComposer { margin: 12px auto 0; }
+.roomPicker { display: flex; align-items: center; gap: 8px; margin-left: auto; font-size: 13px; color: var(--dsw-alias-label-secondary); }
+.roomPicker select { max-width: 240px; padding: 7px; border: 0.5px solid var(--dsw-alias-border-l2); border-radius: var(--dsw-radius-md); background: var(--dsw-alias-bg-layer-1); color: var(--dsw-alias-label-primary); font: inherit; }
+.roomError { max-width: 1600px; margin: 0 auto 16px; color: var(--dsw-alias-state-error-primary); }
+.uploadButton { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; color: var(--dsw-alias-label-secondary); font-size: 13px; }
+.uploadButton input { max-width: 100%; font: inherit; }
+@media (max-width: 1100px) { .roomPicker { margin-left: 0; } }
+.chatStage { display: flex; flex-direction: column; height: clamp(400px, calc(100dvh - 220px), 800px); min-height: 0; --dsh-chat-content-width: 760px; --dsh-composer-side-clearance: 12px; }
+.agentConversation { display: flex; flex-direction: column; flex: 1; min-height: 0; overflow: hidden; padding: 12px 0; container-type: inline-size; }
+.welcome { display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100%; text-align: center; gap: 14px; max-width: 560px; margin: auto; padding: 0 20px; box-sizing: border-box; }
+.welcome h2 { margin: 0; font-size: 24px; line-height: 32px; font-weight: 500; }
+.welcome p { margin: 0; font-size: 14px; line-height: 22px; color: var(--dsw-alias-label-secondary); }
+/* Starter examples. They sit within the welcome's own gap, so they add one rhythm
+   to the block rather than their own. */
+.starters { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.autoComposer { display: flex; flex-direction: column; flex-shrink: 0; gap: 8px; width: min(100%, 792px); box-sizing: border-box; padding: 12px; border-radius: var(--dsw-radius-xl); }
+.autoComposer .promptInput { min-height: 64px; height: 72px; max-height: 140px; resize: none; overflow-y: auto; font-size: 14px; line-height: 22px; padding: 6px 8px; }
+.autoComposer .sourceImage { margin: 0; }
+.composerToolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; min-width: 0; }
+/* Dictation and send move as one unit, so the wrap a running Stop button forces
+   keeps them together on the right instead of stranding the microphone alone at
+   the left of an otherwise empty second row. */
+.composerActions { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.dropHint { flex: 1; min-width: 0; font-size: 12px; color: var(--dsw-alias-label-secondary); }
+.sendButton { flex-shrink: 0; width: 34px; height: 34px; padding: 0; border-radius: 50%; corner-shape: round; }
+.dropActive { outline: 2px solid var(--dsw-alias-state-business-primary); outline-offset: 2px; }
+.fileInput { display: none; }
+.attachments { display: flex; gap: 8px; overflow-x: auto; max-height: 90px; padding-bottom: 4px; }
+.attachments .sourceImage { flex-shrink: 0; min-width: 200px; max-width: 300px; }
 .composerHead { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; grid-column: 1 / -1; padding-bottom: 14px; border-bottom: 0.5px solid var(--dsw-alias-border-l2); }
 .composerHead h2 { margin: 0; font-size: 18px; font-weight: 500; line-height: 26px; }
 .composerHead p { margin: 3px 0 0; color: var(--dsw-alias-label-secondary); font-size: 13px; line-height: 20px; }
@@ -105,7 +143,7 @@
 .notice,
 .error,
 .modelSummary { margin: 10px 0 0; font-size: 13px; line-height: 20px; }
-.notice { color: var(--dsw-alias-state-warning-primary); }
+.notice { color: var(--dsw-alias-state-warn-primary); }
 .error { color: var(--dsw-alias-state-error-primary); }
 .modelSummary { color: var(--dsw-alias-label-tertiary); }
 
@@ -129,9 +167,7 @@
 .galleryHeaderActions { display: flex; align-items: center; gap: 10px; }
 .galleryHeader h2 { margin-bottom: 2px; }
 .galleryHeader p { margin: 0; color: var(--dsw-alias-label-secondary); font-size: 13px; }
-.galleryTabs { display: flex; gap: 4px; padding: 3px; border: 0.5px solid var(--dsw-alias-border-l2); border-radius: var(--dsw-radius-lg); background: var(--dsw-alias-bg-layer-1); }
-.galleryTabs [aria-selected='true'] { color: var(--dsw-alias-label-primary); background: var(--dsw-alias-bg-layer-3); }
-.selectionBar { position: sticky; top: 0; z-index: 4; display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin: 0 0 14px; padding: 10px 12px; border: 0.5px solid var(--dsw-alias-border-l2); border-radius: var(--dsw-radius-lg); background: var(--dsw-alias-bg-layer-1); box-shadow: var(--dsw-shadow-sm); }
+.selectionBar { position: sticky; top: 0; z-index: 4; display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin: 0 0 14px; padding: 10px 12px; border: 0.5px solid var(--dsw-alias-border-l2); border-radius: var(--dsw-radius-lg); background: var(--dsw-alias-bg-layer-1); }
 .selectionBar strong { font-size: 13px; font-weight: 500; white-space: nowrap; }
 .selectionBar span { flex: 1; color: var(--dsw-alias-label-secondary); font-size: 12px; white-space: nowrap; }
 .selectionBar button { display: inline-flex; align-items: center; gap: 5px; }
@@ -165,12 +201,63 @@
 .download { margin-left: auto; }
 .deleteButton { color: var(--dsw-alias-state-error-primary); }
 .confirmActions { display: flex; justify-content: flex-end; gap: 8px; }
+.connectionForm { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.connectionDialog { width: 520px; max-width: calc(100vw - 32px); background: var(--dsw-alias-bg-layer-1); }
+.connectionForm p { margin: 0; color: var(--dsw-alias-label-secondary); font-size: 13px; overflow-wrap: anywhere; }
+.connectionForm label { display: flex; flex-direction: column; gap: 6px; font-size: 13px; }
+.connectionForm input, .connectionForm select { box-sizing: border-box; width: 100%; min-width: 0; padding: 8px 10px; border: 0.5px solid var(--dsw-alias-border-l2); border-radius: var(--dsw-radius-md); background: var(--dsw-alias-bg-layer-1); color: var(--dsw-alias-label-primary); font: inherit; }
+.connectionForm .error { color: var(--dsw-alias-state-error-primary); }
+.confirmActions { flex-wrap: wrap; }
 
 @media (max-width: 720px) {
   .panel { padding: 20px 14px 36px; }
   .header { align-items: flex-start; }
-  .headerActions { flex-direction: column; align-items: flex-end; }
+  /*
+   * A phone gets one chrome row, not four. The header's three actions stack into a
+   * ragged right column otherwise, and the labels are what makes them stack, so the
+   * labels go and every action keeps its accessible name. The same class hides the
+   * mode bar's label and the connection button's, which is what lets the mode pills
+   * and the new-conversation action share one row.
+   */
+  .headerActions { flex-direction: row; align-items: center; }
+  .actionLabel { display: none; }
+  /* The room list becomes one horizontal strip instead of a stacked card: on a
+     phone the heading, the archive toggle and the rooms it lists are all one
+     choice, and stacking them cost more height than the transcript had. */
+  .conversationList {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    max-height: none;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 8px 10px;
+    /* A strip of rooms is wider than a phone, so it must not size to its content:
+       the panel is a block, so `100%` is its content box, and `border-box` keeps the
+       strip's own padding inside that — otherwise the strip ran 30px past the right
+       edge and the panel clipped the image content behind it. */
+    width: 100%;
+    box-sizing: border-box;
+  }
+  /* `align-self: start` in the base rule suits the desktop grid column, but it makes
+     the strip shrink-wrap here. This selector outranks that rule, which appears later
+     in the file and would otherwise win at equal specificity. */
+  .withRooms > .conversationList { align-self: stretch; }
+  .conversationList h2 { flex: none; margin: 0; }
+  /* A chip keeps a legible width and the strip scrolls to the rest. Letting them
+     shrink instead collapsed every room to an icon sliver with no name, which left
+     nothing to choose between — the strip is a scroller, not a fitter. */
+  .conversationList .conversationEntry { flex: none; max-width: 220px; }
+  .conversationList .conversationAction { flex: none; }
   .composer { display: flex; flex-direction: column; padding: 14px; }
+  /*
+   * The desktop prompt box is 190px tall and vertically resizable. On a phone that
+   * height plus the parameter block pushed Generate — the only action in this form —
+   * below the fold, and the resize grabber is unusable on touch. A shorter box keeps
+   * the whole form and its action on one screen.
+   */
+  .promptArea .promptInput { min-height: 96px; resize: none; }
   .composerHead { padding-bottom: 12px; }
   .composerHead > span { display: none; }
   .controls { width: 100%; }
@@ -179,4 +266,215 @@
   .galleryHeader { align-items: flex-start; flex-direction: column; }
   .galleryHeaderActions { width: 100%; justify-content: space-between; }
   .selectionBar span { flex-basis: 100%; order: 2; }
+  /*
+   * Bounded against the panel's real chrome, not just the viewport. On a phone the
+   * title, mode bar and conversation list above the stage cost roughly 200px, so
+   * subtracting only 240px from the viewport left the stage extending past the
+   * fold — and the composer, which sits at its bottom, was off screen with no
+   * visible way to send anything. The stage cannot simply fill instead: the
+   * gallery below it is a sibling in the same column and thousands of pixels tall,
+   * so a growing stage collapses to nothing against it.
+   *
+   * No minimum: `--dsh-frame-viewport-height` is the area the soft keyboard leaves,
+   * and a floor larger than what remains would put the composer back behind the
+   * keyboard — the failure this whole bound exists to prevent. A short stage only
+   * shortens the transcript while the user is typing, which is the cheaper loss.
+   */
+  .chatStage { height: min(620px, max(0px, calc(var(--dsh-frame-viewport-height, 100dvh) - 420px))); }
+  /*
+   * While the soft keyboard is up the panel cannot show its own chrome and an input
+   * at once: the title, mode bar and conversation list alone cost more than the
+   * height a keyboard leaves. Everything below the composer goes too — the gallery
+   * is behind the keyboard and unreadable there, and letting it yield is what frees
+   * the height the stage needs.
+   *
+   * The panel then becomes a flex column that does not scroll, so the composer's
+   * height is measured by layout rather than by arithmetic: subtracting fixed
+   * offsets from the viewport would have to know the frame's panel bar, its
+   * safe-area inset, and this panel's own padding, and would silently drift the
+   * moment any of them changed.
+   *
+   * `data-dsh-keyboard` is set by the phone frame; see MobileFrame's
+   * KEYBOARD_ATTRIBUTE, which documents the literal for consumers here.
+   */
+  :global([data-dsh-keyboard]) .panel:has(.chatStage) { display: flex; flex-direction: column; overflow: hidden; }
+  :global([data-dsh-keyboard]) .header,
+  :global([data-dsh-keyboard]) .modeBar,
+  :global([data-dsh-keyboard]) .conversationList,
+  :global([data-dsh-keyboard]) .roomPicker,
+  :global([data-dsh-keyboard]) .roomLayout:has(.chatStage) > .gallery { display: none; }
+  /* `margin: 0` rather than the base `margin: auto`: a vertical auto margin absorbs
+     the free space before `flex: 1` can grow into it. */
+  :global([data-dsh-keyboard]) .roomLayout:has(.chatStage) { flex: 1; min-height: 0; gap: 0; margin: 0; }
+  /* The floor is the composer's own height: a shorter box overflows its contents
+     over whatever follows, which is how the gallery was being painted over. */
+  :global([data-dsh-keyboard]) .chatStage { height: auto; flex: 1; min-height: 148px; }
+  .autoComposer .composerToolbar { gap: 6px; }
+  .dropHint { display: none; }
+  .composerToolbar .sendButton { width: 34px; }
+  .roomLayout .grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+}
+
+.promptArea { min-width: 0; }
+.promptVoice { display: flex; justify-content: flex-end; min-height: 32px; padding: 0 10px 6px; }
+
+.withRooms { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 24px; }
+.withRooms > .gallery { grid-column: 2; }
+.conversationList { align-self: start; position: sticky; top: 0; max-height: calc(100dvh - 180px); overflow-y: auto; min-width: 0; grid-column: 1; grid-row: 1 / span 3; padding: 14px; border-radius: var(--dsw-radius-xl); background: var(--dsw-alias-bg-layer-1); border: 0.5px solid var(--dsw-alias-border-l2); }
+.conversationList h2 { margin: 0 0 12px; font-size: 13px; font-weight: 500; }
+.conversationRow { display: flex; align-items: center; gap: 8px; width: 100%; padding: 10px; border: 0; border-radius: var(--dsw-radius-md); background: transparent; color: var(--dsw-alias-label-secondary); font: inherit; font-size: 13px; text-align: left; cursor: pointer; }
+.conversationEntry { display: flex; align-items: center; }
+.conversationEntry > .conversationRow { min-width: 0; flex: 1; }
+.conversationAction { flex-shrink: 0; width: 28px; height: 28px; padding: 0; opacity: 0; }
+.conversationEntry:hover .conversationAction, .conversationEntry:focus-within .conversationAction { opacity: 1; }
+@media (hover: none) { .conversationAction { opacity: 1; } }
+.conversationRow span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.conversationRow svg { flex-shrink: 0; }
+.conversationRow:hover, .conversationRow[aria-current='page'] { background: var(--dsw-alias-bg-layer-3); color: var(--dsw-alias-label-primary); }
+.conversationRow:focus-visible { outline: 2px solid var(--dsw-alias-state-business-primary); }
+@media (max-width: 900px) { .withRooms { display: flex; } .conversationList { max-height: 180px; overflow-y: auto; } }
+
+@container images (max-width: 900px) {
+  .withRooms { display: flex; }
+  .conversationList { position: static; max-height: 180px; overflow-y: auto; }
+}
+
+@container images (max-width: 720px) {
+  .header { align-items: flex-start; flex-wrap: wrap; }
+  .headerActions { flex-wrap: wrap; }
+  .composer { display: flex; flex-direction: column; padding: 14px; }
+  /* See the phone block: the same two reasons apply to a container this narrow. */
+  .promptArea .promptInput { min-height: 96px; resize: none; }
+  .composerHead > span { display: none; }
+  .controls { width: 100%; }
+  .dropHint { display: none; }
+  .roomLayout .grid { grid-template-columns: repeat(auto-fill, minmax(min(160px, 100%), 1fr)); }
+}
+
+.communityPanel { display: flex; flex-direction: column; overflow-y: auto; padding: 24px; }
+.communityHeader { width: 100%; max-width: none; flex: none; }
+.communityLayout { width: 100%; max-width: none; margin: 0; flex: none; min-height: 420px; grid-template-rows: auto; }
+.communityLayout > .conversationList { grid-row: 1; }
+.communityStage > .dropHint { flex: none; margin: 0 auto 12px; }
+.communityStage { height: clamp(400px, 52dvh, 640px); min-height: 0; grid-row: 1; }
+.communityConversation { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+.communityConversation > :global([data-slot]) { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+.communityConversation :global([data-conversation-content]) {
+  --dsh-chat-content-width: min(calc(100% - 32px), 920px);
+  --dsh-composer-card-max-width: min(calc(100% - 16px), 952px);
+}
+.communityConversation :global([data-conversation-scroll]) > :global([data-slot="conversation.session"]) { flex: 1; }
+.communityConversation :global([data-conversation-region="composer"]) { margin-top: auto; }
+.communityGreeting { padding: 48px 20px 24px; text-align: center; }
+.communityGreeting h2 { margin: 0 0 12px; font-size: 24px; font-weight: 500; }
+.communityGreeting p { margin: 0; color: var(--dsw-alias-label-secondary); }
+.communityBlank { justify-content: center; }
+.communityBlank > :global([data-conversation-content]) { flex: none; }
+.communityMedia { margin-left: 244px; margin-top: 32px; }
+@container images (max-width: 900px) {
+  .communityPanel { padding: 16px; }
+  .communityMedia { margin-left: 0; }
+  .communityStage { flex: none; }
+}
+
+.serverSection { margin-bottom: 24px; display: flex; align-items: center; gap: 16px; }
+.serverPanel { position: relative; flex: 1; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 22px; border: 1px solid var(--dsw-alias-border-l2); border-radius: var(--dsw-radius-xl); background: var(--dsw-alias-bg-layer-1); overflow: hidden; }
+.serverSummary { display: flex; align-items: center; gap: 14px; }
+.serverSummary h2 { margin: 0 0 4px; font-size: 14px; font-weight: 500; }
+.serverSummary p { margin: 0; font-size: 13px; color: var(--dsw-alias-label-secondary); }
+.serverPanel[data-server-state='running'] .serverSummary p { color: var(--dsw-alias-state-success-primary); }
+.serverPanel[data-server-state='failed'] .serverSummary p { color: var(--dsw-alias-state-error-primary); }
+.serverActions { display: flex; flex-wrap: wrap; gap: 8px; }
+.serverProgress { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: var(--dsw-alias-border-l2); }
+.serverProgress::after { content: ''; display: block; width: 35%; height: 100%; background: var(--dsw-alias-state-business-primary); animation: serverProgress 1.4s ease-in-out infinite; }
+@keyframes serverProgress { from { transform: translateX(-100%); } to { transform: translateX(390%); } }
+@media (prefers-reduced-motion: reduce) { .serverProgress::after { animation: none; width: 100%; } }
+.chatUnavailable { margin: 0 auto 12px; max-width: 920px; padding: 12px 16px; border-radius: var(--dsw-radius-lg); background: var(--dsw-alias-bg-layer-1); color: var(--dsw-alias-label-secondary); font-size: 13px; }
+.communityPanel .conversationList { background: var(--dsw-alias-bg-layer-1); }
+.communityMedia .galleryHeader { padding-bottom: 12px; border-bottom: 1px solid var(--dsw-alias-border-l2); }
+@container images (max-width: 720px) { .serverSection { flex-direction: column; align-items: stretch; } .serverPanel { padding: 16px; } }
+
+/* Content keeps the conversation and reusable assets in one studio viewport. */
+.communityPanel { padding: 24px 28px; gap: 16px; }
+.communityHeader { margin: 0; align-items: center; gap: 24px; }
+.communityHeader p { color: var(--dsw-alias-label-secondary); }
+.communityHeader .headerActions { flex-wrap: wrap; justify-content: flex-end; }
+.studioToolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.studioTabs, .mediaCollections, .mediaFilters { display: flex; gap: 4px; align-items: center; }
+.studioTabs { padding: 4px; background: var(--dsw-alias-bg-layer-1); border-radius: var(--dsw-radius-lg); }
+.studioTabs [aria-pressed='true'], .mediaCollections [aria-pressed='true'], .mediaFilters [aria-pressed='true'] {
+  background: var(--dsw-alias-bg-layer-3); color: var(--dsw-alias-label-primary);
+}
+.studioConnection { font-size: 13px; color: var(--dsw-alias-label-secondary); }
+.studioConnection summary { cursor: pointer; display: flex; align-items: center; gap: 8px; padding: 8px; }
+.studioConnection[open] { flex-basis: 100%; }
+.studioConnection .serverSection { margin: 8px 0 0; }
+.studioConnection .serverPanel { border-width: 0.5px; }
+.studioWorkspace { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 360px); gap: 20px; min-height: 0; flex: 1; }
+.communityLayout { display: flex; flex-direction: column; gap: 0; min-height: 480px; border: 0; border-radius: var(--dsw-radius-xl); box-shadow: var(--dsw-elevation-panel); overflow: hidden; }
+.communityLayout[hidden], .communityMedia .gallery[hidden] { display: none; }
+.studioConversations { background: var(--dsw-alias-bg-layer-1); border-bottom: 0.5px solid var(--dsw-alias-border-l2); padding: 12px 18px; font-size: 13px; }
+.studioConversations summary { cursor: pointer; color: var(--dsw-alias-label-secondary); }
+.studioConversationTitle { margin-left: 14px; color: var(--dsw-alias-label-primary); overflow-wrap: anywhere; }
+.studioConversations .conversationList { position: static; margin-top: 12px; max-height: 200px; overflow-y: auto; border: 0; padding: 0; }
+.communityStage { height: auto; flex: 1; padding: 14px 0 0; }
+.communityStage > .dropHint { font-size: 12px; color: var(--dsw-alias-label-secondary); padding: 0 16px; }
+.communityConversation { overflow: hidden; }
+.communityBlank { justify-content: flex-start; }
+.communityBlank .communityGreeting { flex: 1; min-height: 0; overflow-y: auto; margin: 0 auto; }
+.communityBlank > :global([data-slot]) { flex: none; }
+.communityGreeting { text-align: left; padding: 32px 28px 20px; width: min(100%, 800px); box-sizing: border-box; margin: auto; }
+.studioEyebrow { color: var(--dsw-alias-label-secondary); font-size: 11px; letter-spacing: 0.12em; line-height: 20px; }
+.communityGreeting h2 { font-size: 32px; line-height: 40px; margin: 12px 0 8px; font-weight: 500; }
+.communityGreeting p { font-size: 14px; line-height: 22px; max-width: 540px; }
+.ideaGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 28px; }
+.ideaCard { padding: 0; border: 0.5px solid var(--dsw-alias-border-l2); background: var(--dsw-alias-bg-layer-1); border-radius: var(--dsw-radius-lg); overflow: hidden; cursor: pointer; color: var(--dsw-alias-label-primary); text-align: left; font: inherit; }
+.ideaCard:hover { background: var(--dsw-alias-bg-layer-2); }
+.ideaCard:focus-visible, .studioConnection summary:focus-visible, .studioConversations summary:focus-visible { outline: 2px solid var(--dsw-alias-state-business-primary); outline-offset: 3px; }
+.ideaCard:disabled { opacity: 0.5; cursor: default; }
+.ideaArtwork { display: flex; align-items: center; justify-content: center; height: 62px; color: var(--dsw-alias-state-business-primary); background: linear-gradient(135deg, var(--dsw-alias-bg-layer-3), var(--dsw-alias-bg-layer-1)); }
+.ideaArtwork svg { width: 26px; height: 26px; }
+.ideaArtwork[data-kind='edit'], .ideaArtwork[data-kind='film'] { background: linear-gradient(45deg, var(--dsw-alias-bg-layer-1), var(--dsw-alias-bg-layer-3)); }
+.ideaCopy { display: flex; flex-direction: column; gap: 5px; padding: 12px; }
+.ideaTitle { font-size: 13px; line-height: 18px; font-weight: 500; }
+.ideaHint { font-size: 12px; line-height: 18px; color: var(--dsw-alias-label-secondary); }
+.communityMedia { min-width: 0; margin: 0; padding: 18px; border: 0.5px solid var(--dsw-alias-border-l2); border-radius: var(--dsw-radius-xl); background: var(--dsw-alias-bg-layer-1); overflow-y: auto; max-height: calc(100dvh - 200px); }
+.mediaHeading { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 16px; }
+.mediaHeading h2 { margin: 0 0 6px; font-size: 16px; line-height: 24px; font-weight: 500; }
+.mediaHeading p { margin: 0; font-size: 12px; line-height: 18px; color: var(--dsw-alias-label-secondary); }
+.mediaSearch { box-sizing: border-box; width: 100%; margin: 12px 0 8px; padding: 10px 12px; border: 0.5px solid var(--dsw-alias-border-l2); border-radius: var(--dsw-radius-md); background: var(--dsw-alias-bg-base); color: var(--dsw-alias-label-primary); font: inherit; font-size: 13px; }
+.mediaSearch:focus-visible { outline: 2px solid var(--dsw-alias-state-business-primary); outline-offset: 2px; }
+.communityMedia .gallery { margin: 16px 0 0; width: 100%; max-width: none; }
+.communityMedia .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.communityMedia .cardBody { padding: 10px; }
+.communityMedia .cardActions { flex-wrap: wrap; gap: 6px; }
+.communityMedia .prompt { font-size: 12px; overflow-wrap: anywhere; }
+.communityMedia .selectionBar { flex-wrap: wrap; padding: 12px 0; position: static; }
+.communityMedia .video { width: 100%; aspect-ratio: 1; object-fit: cover; }
+.communityMedia .preview { aspect-ratio: 1; }
+.communityPanel[data-studio-view='library'] .studioWorkspace { grid-template-columns: minmax(0, 1fr); }
+.communityPanel[data-studio-view='library'] .communityMedia { max-height: none; }
+.communityPanel[data-studio-view='library'] .communityMedia .grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+@container images (max-width: 1100px) {
+  .studioWorkspace { grid-template-columns: minmax(0, 1fr) 300px; gap: 14px; }
+  .communityGreeting { padding: 24px 20px 16px; }
+  .communityGreeting h2 { font-size: 28px; line-height: 36px; }
+  .ideaGrid { margin-top: 20px; }
+  .ideaArtwork { height: 36px; }
+  .ideaCopy { padding: 10px; }
+}
+@container images (max-width: 850px) {
+  .studioWorkspace { grid-template-columns: minmax(0, 1fr); }
+  .communityMedia { max-height: none; }
+  .communityMedia .grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+  .communityGreeting h2 { font-size: 24px; line-height: 32px; }
+}
+@container images (max-width: 520px) {
+  .communityPanel { padding: 16px; }
+  .communityHeader .headerActions { justify-content: flex-start; }
+  .communityLayout { min-height: 560px; }
+  .communityGreeting { padding: 20px 16px; }
+  .ideaGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 18px; }
+  .ideaArtwork { height: 40px; }
+  .studioConversationTitle { display: block; margin: 6px 0 0; }
 }

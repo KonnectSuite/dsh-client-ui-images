@@ -1,0 +1,263 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`offers community installation without probing ComfyUI or creating a session 1`] = `
+<div>
+  <main
+    class="_panel_554366 _communityPanel_554366"
+    data-studio-view="studio"
+  >
+    <header
+      class="_header_554366 _communityHeader_554366"
+    >
+      <div>
+        <h1>
+          Content
+        </h1>
+        <p>
+          Create photos and videos, edit images, and reuse your saved media.
+        </p>
+      </div>
+      <div
+        class="_headerActions_554366"
+      >
+        <button
+          class="_button_4d2f85 _outline_4d2f85 _md_4d2f85"
+          type="button"
+        >
+          Content settings
+        </button>
+        <button
+          class="_button_4d2f85 _outline_4d2f85 _md_4d2f85"
+          type="button"
+        >
+          Refresh
+        </button>
+      </div>
+    </header>
+    <div
+      class="_studioToolbar_554366"
+    >
+      <div
+        aria-label="Content views"
+        class="_studioTabs_554366"
+      >
+        <button
+          aria-pressed="true"
+          class="_button_4d2f85 _ghost_4d2f85 _md_4d2f85"
+          type="button"
+        >
+          Studio
+        </button>
+        <button
+          aria-pressed="false"
+          class="_button_4d2f85 _ghost_4d2f85 _md_4d2f85"
+          type="button"
+        >
+          Library
+        </button>
+      </div>
+      <details
+        class="_studioConnection_554366"
+      >
+        <summary>
+          <svg
+            aria-hidden="true"
+            class="_spinner_106763"
+            data-state="ongoing"
+            height="14"
+            viewBox="0 0 24 24"
+            width="14"
+          >
+            <g
+              class="_spinnerMotion_106763"
+            >
+              <circle
+                class="_spinnerTrack_106763"
+                cx="12"
+                cy="12"
+                r="9.5"
+              />
+              <circle
+                class="_spinnerArc_106763"
+                cx="12"
+                cy="12"
+                r="9.5"
+              />
+            </g>
+          </svg>
+          Checking the server…
+        </summary>
+        <div
+          class="_serverSection_554366"
+        >
+          <div
+            data-testid="resident-chat"
+          />
+        </div>
+      </details>
+    </div>
+    <section
+      class="_welcome_554366"
+    >
+      <h2>
+        Enable image creation
+      </h2>
+      <p>
+        Enable or restore the shipped dsh-image-gen bundle in Plugin Market, then configure an image provider. Return here and select Refresh.
+      </p>
+      <button
+        class="_button_4d2f85 _ghost_4d2f85 _md_4d2f85"
+        type="button"
+      >
+        Open Plugins
+      </button>
+      <a
+        href="https://github.com/KonnectSuite/dsh-image-gen"
+        rel="noreferrer"
+        target="_blank"
+      >
+        View image plugin
+      </a>
+    </section>
+    <div
+      class="_studioWorkspace_554366"
+    >
+      <div
+        class="_roomLayout_554366 _communityLayout_554366"
+      >
+        <details
+          class="_studioConversations_554366"
+        >
+          <summary>
+            Conversations
+            <span
+              class="_studioConversationTitle_554366"
+            >
+              New content conversation
+            </span>
+          </summary>
+          <nav
+            aria-label="Conversations"
+            class="_conversationList_554366"
+          >
+            <button
+              class="_button_4d2f85 _ghost_4d2f85 _md_4d2f85"
+              type="button"
+            >
+              Archived
+            </button>
+          </nav>
+        </details>
+        <section
+          class="_creationArea_554366 _chatStage_554366 _communityStage_554366"
+        >
+          <p
+            class="_dropHint_554366"
+          >
+            Drag a gallery image or video here, or choose Add to chat.
+          </p>
+        </section>
+      </div>
+      <div
+        class="_communityMedia_554366"
+      >
+        <div
+          class="_mediaHeading_554366"
+        >
+          <div>
+            <h2>
+              Library
+            </h2>
+            <p>
+              Drag into chat or add as a reference. Your originals stay intact.
+            </p>
+          </div>
+          <button
+            class="_button_4d2f85 _ghost_4d2f85 _md_4d2f85"
+            type="button"
+          >
+            Select
+          </button>
+        </div>
+        <div
+          class="_mediaCollections_554366"
+        >
+          <button
+            aria-pressed="true"
+            class="_button_4d2f85 _ghost_4d2f85 _sm_4d2f85"
+            type="button"
+          >
+            Local media
+          </button>
+          <button
+            aria-pressed="false"
+            class="_button_4d2f85 _ghost_4d2f85 _sm_4d2f85"
+            type="button"
+          >
+            Recent runs
+          </button>
+        </div>
+        <input
+          aria-label="Search loaded media"
+          class="_mediaSearch_554366"
+          placeholder="Search filenames or prompts"
+          type="search"
+          value=""
+        />
+        <div
+          class="_mediaFilters_554366"
+        >
+          <button
+            aria-pressed="true"
+            class="_button_4d2f85 _ghost_4d2f85 _sm_4d2f85"
+            type="button"
+          >
+            All media
+          </button>
+          <button
+            aria-pressed="false"
+            class="_button_4d2f85 _ghost_4d2f85 _sm_4d2f85"
+            type="button"
+          >
+            Images
+          </button>
+          <button
+            aria-pressed="false"
+            class="_button_4d2f85 _ghost_4d2f85 _sm_4d2f85"
+            type="button"
+          >
+            Videos
+          </button>
+        </div>
+        <section
+          aria-label="Recent runs"
+          class="_gallery_554366"
+          hidden=""
+        >
+          <p
+            class="_empty_554366"
+          >
+            Generated images will appear here.
+          </p>
+          <div
+            class="_grid_554366"
+          />
+        </section>
+        <section
+          aria-label="Local media"
+          class="_gallery_554366"
+        >
+          <p
+            class="_empty_554366"
+          >
+            No images are saved in the output folder yet.
+          </p>
+          <div
+            class="_grid_554366"
+          />
+        </section>
+      </div>
+    </div>
+  </main>
+</div>
+`;

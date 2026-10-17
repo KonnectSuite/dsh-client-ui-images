@@ -3,20 +3,41 @@
 # After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write packages/client/ui-images/README.md
 /:
-  en: 83195ae662f9d02d
-  zh: 5ea47ecffa0e9336
+  en: 55fdf15ca1daabdc
+  zh: 0f8a1cb17c73796f
 /deepseek-ai-dsh-client-ui-images:
   en: ca9ab5e36c3dbf5e
   zh: f32967492ee2de56
 /deepseek-ai-dsh-client-ui-images/summary:
-  en: ac4c2b2ca43c34bb
-  zh: 8f59c7d8ae0284a5
+  en: cfbc66f76053b346
+  zh: 09c9e4314ac36f4b
+/deepseek-ai-dsh-client-ui-images/table-of-contents:
+  en: fe1ecb09a73d1c7a
+  zh: fe0654c583e05cd3
+/deepseek-ai-dsh-client-ui-images/use-this-package:
+  en: 12c6b7437cbb665c
+  zh: 68d065c5a11e0955
+/deepseek-ai-dsh-client-ui-images/understand-the-implementation:
+  en: a936ff54433d4da0
+  zh: c6eb25c9bb3e8af2
 /deepseek-ai-dsh-client-ui-images/model-experience:
-  en: 1ef187e56153ee0a
-  zh: ab19b071ea86ed4a
-/deepseek-ai-dsh-client-ui-images/model-experience/kv-cache-effect:
-  en: f1357adfbfd6db8a
-  zh: 747d35e78c1e39cf
+  en: 215e7ba838619b7b
+  zh: a311da3843709f90
+/deepseek-ai-dsh-client-ui-images/model-experience/image-conversation:
+  en: 70a1f7f0aef70706
+  zh: 0515656c470bf4ff
+/deepseek-ai-dsh-client-ui-images/model-experience/image-conversation/what-the-model-sees:
+  en: c5eca8a9a1d54f9c
+  zh: 9630cd730fd8db71
+/deepseek-ai-dsh-client-ui-images/model-experience/image-conversation/token-effect:
+  en: 6e857e0d566a7277
+  zh: 20a4eb3ed102c282
+/deepseek-ai-dsh-client-ui-images/model-experience/image-conversation/kv-cache-effect:
+  en: 7810a328ea4ea8b7
+  zh: 27f02838f57309fb
 /deepseek-ai-dsh-client-ui-images/known-limitations-and-deferred-work:
-  en: 1efbaaa4b4658fa7
-  zh: 0366a419f21a91d9
+  en: 0bfe06458eb88200
+  zh: e51c9ece2e37dc33
+/deepseek-ai-dsh-client-ui-images/known-limitations-and-deferred-work/dev-note:
+  en: 006f05a1269b2d0d
+  zh: f89c1ec2a78447c5
