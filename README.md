@@ -9,7 +9,7 @@ English | [中文](README.zh.md)
 
 ## Summary
 
-Create images and videos in a dedicated Content conversation. Image creation and editing use the configured dsh-image-gen provider; video creation uses installed ComfyUI workflows. Add saved media to chat, attach several files together, or drag references into the composer before sending. Content preserves existing saved conversations and uses the same composer, approvals, and output cards as workspace chat.
+Create images and videos in a dedicated Content conversation. Image creation and editing use the configured dsh-image-gen provider; video creation uses installed ComfyUI workflows. Paste an image, attach several files together, or add saved media to chat before sending. Follow-up edits use the latest result without another upload; new attachments take priority. The provider automatically selects compatible create and edit workflows when the model omits a workflow override. Content preserves earlier results and saved conversations and uses the same composer, approvals, and output cards as workspace chat.
 
 ## Table of Contents
 

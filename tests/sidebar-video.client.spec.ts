@@ -12,18 +12,20 @@ interface VideoViewer {
 }
 const { builtinViewers } = await vi.importActual<{ builtinViewers: () => VideoViewer[] }>('dsh-better-sidebar/src/client/builtins/viewers.tsx')
 const { planFirstMatch } = await vi.importActual<{ planFirstMatch: (viewer: VideoViewer, address: () => string) => object }>('dsh-better-sidebar/src/client/editor-load.ts')
-const { mediaUrl, downloadUrl, sidebarSocketUrl } = await vi.importActual<{
+const { mediaUrl, downloadUrl } = await vi.importActual<{
   mediaUrl: (scope: { sessionId: string; cwd: string }, path: string) => string
   downloadUrl: (scope: { sessionId: string; cwd: string }, path: string) => string
-  sidebarSocketUrl: (path: string, sessionId: string) => string
 }>('dsh-better-sidebar/src/client/api.ts')
+const { hostWebSocketUrl } = await vi.importActual<{ hostWebSocketUrl: (path: string) => URL }>('dsh-better-sidebar/src/client/host-route-url.ts')
 const { mediaTypeForPath } = await vi.importActual<{ mediaTypeForPath: (path: string) => string }>('dsh-better-sidebar/src/index.ts')
 
 afterEach(() => { cleanup(); vi.unstubAllGlobals() })
 
 it.each(['agent-opens', 'fs-watch'])('connects the %s feed to the desktop Host', (feed) => {
   vi.stubGlobal('__DSH_TRANSPORT__', { streamBaseUrl: 'http://127.0.0.1:19387' })
-  expect(sidebarSocketUrl(`/sidebar/ws/${feed}`, 'room with spaces')).toBe(
+  const address = hostWebSocketUrl(`/sidebar/ws/${feed}`)
+  address.searchParams.set('sessionId', 'room with spaces')
+  expect(address.toString()).toBe(
     `ws://127.0.0.1:19387/sidebar/ws/${feed}?sessionId=room+with+spaces`,
   )
 })
@@ -32,7 +34,9 @@ it('keeps the web feed on the page origin', () => {
   const expected = new URL('/sidebar/ws/agent-opens', location.origin)
   expected.protocol = expected.protocol === 'https:' ? 'wss:' : 'ws:'
   expected.searchParams.set('sessionId', 'room')
-  expect(sidebarSocketUrl('/sidebar/ws/agent-opens', 'room')).toBe(expected.toString())
+  const address = hostWebSocketUrl('/sidebar/ws/agent-opens')
+  address.searchParams.set('sessionId', 'room')
+  expect(address.toString()).toBe(expected.toString())
 })
 
 it.each([

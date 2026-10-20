@@ -1,4 +1,6 @@
 .panel {
+  --dsh-scrollbar-thumb: var(--dsw-alias-scrollbar-bg-l2);
+  --dsh-scrollbar-thumb-hover: var(--dsw-alias-scrollbar-hover-l2);
   box-sizing: border-box;
   overflow-y: auto;
   height: 100%;
@@ -84,7 +86,7 @@
 .composerActions { display: flex; align-items: center; gap: 8px; margin-left: auto; }
 .dropHint { flex: 1; min-width: 0; font-size: 12px; color: var(--dsw-alias-label-secondary); }
 .sendButton { flex-shrink: 0; width: 34px; height: 34px; padding: 0; border-radius: 50%; corner-shape: round; }
-.dropActive { outline: 2px solid var(--dsw-alias-state-business-primary); outline-offset: 2px; }
+.dropActive { outline: 2px solid var(--dsw-focus-ring-color, var(--dsw-alias-state-business-primary)); outline-offset: 2px; }
 .fileInput { display: none; }
 .attachments { display: flex; gap: 8px; overflow-x: auto; max-height: 90px; padding-bottom: 4px; }
 .attachments .sourceImage { flex-shrink: 0; min-width: 200px; max-width: 300px; }
@@ -189,7 +191,7 @@
 .videoSelection[aria-pressed='true'] .selectionCheck { border-color: var(--dsw-alias-state-business-primary); background: var(--dsw-alias-state-business-primary); color: var(--dsw-alias-bg-base); }
 .selectionControl[aria-pressed='true'] { border-color: var(--dsw-alias-state-business-primary); background: var(--dsw-alias-state-business-primary); color: var(--dsw-alias-bg-base); }
 .selectionCheck { font-size: 16px; line-height: 1; }
-.selectionControl:focus-visible, .preview:focus-visible { outline: 2px solid var(--dsw-alias-state-business-primary); outline-offset: -2px; }
+.selectionControl:focus-visible, .preview:focus-visible { outline: 2px solid var(--dsw-focus-ring-color, var(--dsw-alias-state-business-primary)); outline-offset: -2px; }
 .loading,
 .failed { padding: 20px; color: var(--dsw-alias-label-tertiary); font-size: 12px; }
 .failed { color: var(--dsw-alias-state-error-primary); }
@@ -331,7 +333,7 @@
 .conversationRow span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .conversationRow svg { flex-shrink: 0; }
 .conversationRow:hover, .conversationRow[aria-current='page'] { background: var(--dsw-alias-bg-layer-3); color: var(--dsw-alias-label-primary); }
-.conversationRow:focus-visible { outline: 2px solid var(--dsw-alias-state-business-primary); }
+.conversationRow:focus-visible { outline: 2px solid var(--dsw-focus-ring-color, var(--dsw-alias-state-business-primary)); }
 @media (max-width: 900px) { .withRooms { display: flex; } .conversationList { max-height: 180px; overflow-y: auto; } }
 
 @container images (max-width: 900px) {
@@ -378,7 +380,7 @@
 }
 
 .serverSection { margin-bottom: 24px; display: flex; align-items: center; gap: 16px; }
-.serverPanel { position: relative; flex: 1; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 22px; border: 1px solid var(--dsw-alias-border-l2); border-radius: var(--dsw-radius-xl); background: var(--dsw-alias-bg-layer-1); overflow: hidden; }
+.serverPanel { position: relative; flex: 1; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 22px; border: 0.5px solid var(--dsw-alias-border-l2); border-radius: var(--dsw-radius-xl); background: var(--dsw-alias-bg-layer-1); overflow: hidden; }
 .serverSummary { display: flex; align-items: center; gap: 14px; }
 .serverSummary h2 { margin: 0 0 4px; font-size: 14px; font-weight: 500; }
 .serverSummary p { margin: 0; font-size: 13px; color: var(--dsw-alias-label-secondary); }
@@ -391,7 +393,7 @@
 @media (prefers-reduced-motion: reduce) { .serverProgress::after { animation: none; width: 100%; } }
 .chatUnavailable { margin: 0 auto 12px; max-width: 920px; padding: 12px 16px; border-radius: var(--dsw-radius-lg); background: var(--dsw-alias-bg-layer-1); color: var(--dsw-alias-label-secondary); font-size: 13px; }
 .communityPanel .conversationList { background: var(--dsw-alias-bg-layer-1); }
-.communityMedia .galleryHeader { padding-bottom: 12px; border-bottom: 1px solid var(--dsw-alias-border-l2); }
+.communityMedia .galleryHeader { padding-bottom: 12px; border-bottom: 0.5px solid var(--dsw-alias-border-l2); }
 @container images (max-width: 720px) { .serverSection { flex-direction: column; align-items: stretch; } .serverPanel { padding: 16px; } }
 
 /* Content keeps the conversation and reusable assets in one studio viewport. */
@@ -430,7 +432,7 @@
 .ideaGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 28px; }
 .ideaCard { padding: 0; border: 0.5px solid var(--dsw-alias-border-l2); background: var(--dsw-alias-bg-layer-1); border-radius: var(--dsw-radius-lg); overflow: hidden; cursor: pointer; color: var(--dsw-alias-label-primary); text-align: left; font: inherit; }
 .ideaCard:hover { background: var(--dsw-alias-bg-layer-2); }
-.ideaCard:focus-visible, .studioConnection summary:focus-visible, .studioConversations summary:focus-visible { outline: 2px solid var(--dsw-alias-state-business-primary); outline-offset: 3px; }
+.ideaCard:focus-visible, .studioConnection summary:focus-visible, .studioConversations summary:focus-visible { outline: 2px solid var(--dsw-focus-ring-color, var(--dsw-alias-state-business-primary)); outline-offset: 3px; }
 .ideaCard:disabled { opacity: 0.5; cursor: default; }
 .ideaArtwork { display: flex; align-items: center; justify-content: center; height: 62px; color: var(--dsw-alias-state-business-primary); background: linear-gradient(135deg, var(--dsw-alias-bg-layer-3), var(--dsw-alias-bg-layer-1)); }
 .ideaArtwork svg { width: 26px; height: 26px; }
@@ -443,7 +445,7 @@
 .mediaHeading h2 { margin: 0 0 6px; font-size: 16px; line-height: 24px; font-weight: 500; }
 .mediaHeading p { margin: 0; font-size: 12px; line-height: 18px; color: var(--dsw-alias-label-secondary); }
 .mediaSearch { box-sizing: border-box; width: 100%; margin: 12px 0 8px; padding: 10px 12px; border: 0.5px solid var(--dsw-alias-border-l2); border-radius: var(--dsw-radius-md); background: var(--dsw-alias-bg-base); color: var(--dsw-alias-label-primary); font: inherit; font-size: 13px; }
-.mediaSearch:focus-visible { outline: 2px solid var(--dsw-alias-state-business-primary); outline-offset: 2px; }
+.mediaSearch:focus-visible { outline: 2px solid var(--dsw-focus-ring-color, var(--dsw-alias-state-business-primary)); outline-offset: 2px; }
 .communityMedia .gallery { margin: 16px 0 0; width: 100%; max-width: none; }
 .communityMedia .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 .communityMedia .cardBody { padding: 10px; }
