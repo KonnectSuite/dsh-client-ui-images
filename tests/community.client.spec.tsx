@@ -85,6 +85,9 @@ function fixture(overrides: Partial<ImagesPanelProps> = {}): ImagesPanelProps {
     status: vi.fn(), history: vi.fn(async () => []), library: vi.fn(async () => ({ images: [], total: 0 })),
     generate: vi.fn(), cancel: vi.fn(),
     remove: vi.fn(), removeImage: vi.fn(), removeImages: vi.fn(), image: vi.fn(),
+    readOutputFolder: vi.fn(async () => 'C:\\media'),
+    saveOutputFolder: vi.fn(async () => {}),
+    reveal: vi.fn(async () => {}),
     SessionProvider: ({ children }) => children, renderSlot: vi.fn(() => <div data-testid="resident-chat" />),
     t: key => en[key as keyof typeof en], ...overrides,
   }
@@ -206,4 +209,41 @@ it('accepts media dropped into a running conversation without starting generatio
   await waitFor(() => { expect(addFiles).toHaveBeenCalledWith([file]) })
   expect(props.generate).not.toHaveBeenCalled()
   expect(props.askAgent).not.toHaveBeenCalled()
+})
+
+it('explains an unconfigured output folder instead of reporting the controller error', async () => {
+  const library = vi.fn(async () => { throw new Error('Configure outputDirectory to browse local ComfyUI images') })
+  const props = fixture({ library, readOutputFolder: vi.fn(async () => '') })
+  vi.stubGlobal('fetch', vi.fn(async () => new Response(JSON.stringify({ ok: true, candidates: [{ path: 'C:\\Comfy\\output', files: 3 }], canOpen: true, fileManager: 'explorer' }),
+    { status: 200, headers: { 'content-type': 'application/json' } })))
+  render(<CommunityMedia {...props} revision={0} />)
+
+  // The library route rejects while no folder is configured, so the panel must not call it and
+  // must offer the folder choice instead of the raw controller message the user cannot act on.
+  expect(await screen.findByText(en['gallery.chooseFolder'])).toBeTruthy()
+  // The fixture's `t` does not interpolate, so the detected folder is asserted by its action.
+  expect(screen.getByRole('button', { name: en['connection.folderUseDetected'] })).toBeTruthy()
+  expect(library).not.toHaveBeenCalled()
+  expect(screen.queryByRole('alert')).toBeNull()
+})
+
+it('saves the detected folder without opening the connection dialog', async () => {
+  const saveOutputFolder = vi.fn(async () => {})
+  const props = fixture({ readOutputFolder: vi.fn(async () => ''), saveOutputFolder })
+  vi.stubGlobal('fetch', vi.fn(async () => new Response(JSON.stringify({ ok: true, candidates: [{ path: 'C:\\Comfy\\output', files: 3 }], canOpen: true, fileManager: 'explorer' }),
+    { status: 200, headers: { 'content-type': 'application/json' } })))
+  render(<CommunityMedia {...props} revision={0} />)
+
+  fireEvent.click(await screen.findByRole('button', { name: en['connection.folderUseDetected'] }))
+  await waitFor(() => { expect(saveOutputFolder).toHaveBeenCalledExactlyOnceWith('C:\\Comfy\\output') })
+})
+
+it('reveals a saved file in the host file manager', async () => {
+  const image = { filename: 'saved.png', subfolder: 'saved', type: 'output' }
+  const reveal = vi.fn(async () => {})
+  const props = fixture({ reveal, library: vi.fn(async () => ({ total: 1, images: [{ image, modifiedAt: 0, bytes: 1024 }] })) })
+  render(<CommunityMedia {...props} revision={0} />)
+
+  fireEvent.click(await screen.findByRole('button', { name: en['action.showInExplorer'] }))
+  await waitFor(() => { expect(reveal).toHaveBeenCalledExactlyOnceWith(image) })
 })

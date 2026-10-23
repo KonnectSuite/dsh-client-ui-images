@@ -56,13 +56,19 @@ export interface ImagesInjected {
     readonly removeImage: (image: ComfyImageReference) => Promise<void>;
     readonly removeImages: (images: readonly ComfyImageReference[]) => Promise<ComfyDeleteImagesResult>;
     readonly image: (image: ComfyImageReference) => Promise<string>;
+    /** Current ComfyUI output folder, or an empty string when the library is unconfigured. */
+    readonly readOutputFolder?: () => Promise<string>;
+    /** Save the folder the ComfyUI controller lists saved media from. */
+    readonly saveOutputFolder?: (directory: string) => Promise<void>;
+    /** Select one saved file in the host file manager. */
+    readonly reveal?: (image: ComfyImageReference) => Promise<void>;
 }
 export type ImagesPanelProps = PropsRenderSlots<'images.prompt.activity' | 'images.agent' | 'images.agent.controls' | 'images.connection'> & InjectFace<ImagesInjected> & PropsLocale<typeof NS>;
 /** Render saved or generated media with preview, download, edit, and delete actions.
  * @param props - Media metadata, loader, actions, and localized labels.
  * @returns A media card.
  */
-export declare function ImageCard({ generation, stored, image, deleting, selecting, selected, onSelect, load, onDelete, onReuse, onEdit, onAttach, onFrame, t, }: {
+export declare function ImageCard({ generation, stored, image, deleting, selecting, selected, onSelect, load, onDelete, onReuse, onEdit, onAttach, onFrame, onReveal, t, }: {
     readonly generation?: ComfyGeneration;
     readonly stored?: ComfyStoredImage;
     readonly image: ComfyImageReference;
@@ -76,6 +82,7 @@ export declare function ImageCard({ generation, stored, image, deleting, selecti
     readonly onAttach?: ((image: ComfyImageReference) => void) | undefined;
     readonly onReuse?: (generation: ComfyGeneration) => void;
     readonly onEdit?: ((image: ComfyImageReference, generation: ComfyGeneration | undefined, src: string) => void) | undefined;
+    readonly onReveal?: (() => void) | undefined;
     readonly t: ImagesPanelProps['t'];
 }): ReactNode;
 /** Full-page local ComfyUI image generator. */

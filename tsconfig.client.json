@@ -74,5 +74,9 @@
     {
       "path": "../../session-query/session-log-export/tsconfig.client.json"
     }
+  ],
+  "exclude": [
+    "src/index.ts",
+    "src/output-folders.ts"
   ]
 }

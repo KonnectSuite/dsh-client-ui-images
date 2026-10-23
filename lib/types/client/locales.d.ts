@@ -66,6 +66,10 @@ export declare const zh: {
     readonly 'connection.address': "服务器地址";
     readonly 'connection.folder': "可访问的输出文件夹（可选）";
     readonly 'connection.folderHint': "文件夹必须可由运行 Arya 的电脑访问。远程服务器可使用共享文件夹；留空仍可生成和查看最近运行。";
+    readonly 'connection.folderBrowse': "浏览…";
+    readonly 'connection.folderOpen': "打开文件夹";
+    readonly 'connection.folderDetected': "检测到 {path}（{count} 个媒体文件）";
+    readonly 'connection.folderUseDetected': "使用此文件夹";
     readonly 'connection.test': "测试连接";
     readonly 'connection.save': "保存并重新连接";
     readonly 'connection.pending': "请稍候…";
@@ -139,6 +143,7 @@ export declare const zh: {
     readonly 'action.download': "下载";
     readonly 'action.reuse': "复用设置";
     readonly 'action.editImage': "编辑图像";
+    readonly 'action.showInExplorer': "在文件管理器中显示";
     readonly 'action.clearSource': "移除图像";
     readonly 'action.delete': "删除";
     readonly 'delete.title': "删除图像？";
@@ -157,6 +162,11 @@ export declare const zh: {
     readonly 'gallery.fileMeta': "{date} · {size} KB";
     readonly 'gallery.runMeta': "{width} × {height} · {steps} 步 · 种子 {seed}";
     readonly 'gallery.unconfigured': "设置 ComfyUI 输出目录以浏览已保存的图像。";
+    readonly 'gallery.folderUnset': "尚未设置输出文件夹";
+    readonly 'gallery.openFolder': "打开文件夹";
+    readonly 'gallery.chooseFolder': "选择 ComfyUI 输出文件夹";
+    readonly 'gallery.chooseFolderHint': "媒体库列出该文件夹中的文件。ComfyUI 把每次生成写入其中，Arya 不会复制这些文件。";
+    readonly 'gallery.folderPickerUnavailable': "此主机没有文件夹选择器，请直接输入路径。";
     readonly 'gallery.emptyLibrary': "输出目录中还没有图像。";
     readonly 'gallery.loadMore': "加载更多";
     readonly 'gallery.workflow': "工作流：{workflow}";
@@ -186,6 +196,8 @@ export declare const zh: {
     readonly 'gallery.previous': "上一张图像";
     readonly 'gallery.next': "下一张图像";
     readonly 'notice.failed': "无法完成图像操作。";
+    readonly 'notice.revealFailed': "无法在文件管理器中显示该文件。";
+    readonly 'notice.folderFailed': "无法保存输出文件夹。";
     readonly 'pending.title': "ComfyUI 正在生成图像";
 };
 /** English dictionary, key-identical to the Chinese source of truth. */

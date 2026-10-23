@@ -6,7 +6,8 @@
     "tsBuildInfoFile": "lib/tsconfig.host.tsbuildinfo"
   },
   "files": [
-    "src/index.ts"
+    "src/index.ts",
+    "src/output-folders.ts"
   ],
   "references": [
     {
@@ -17,6 +18,9 @@
     },
     {
       "path": "../../settings/settings"
+    },
+    {
+      "path": "../../util/native-command"
     }
   ]
 }

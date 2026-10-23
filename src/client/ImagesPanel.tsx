@@ -129,6 +129,12 @@ export interface ImagesInjected {
   readonly removeImage: (image: ComfyImageReference) => Promise<void>
   readonly removeImages: (images: readonly ComfyImageReference[]) => Promise<ComfyDeleteImagesResult>
   readonly image: (image: ComfyImageReference) => Promise<string>
+  /** Current ComfyUI output folder, or an empty string when the library is unconfigured. */
+  readonly readOutputFolder?: () => Promise<string>
+  /** Save the folder the ComfyUI controller lists saved media from. */
+  readonly saveOutputFolder?: (directory: string) => Promise<void>
+  /** Select one saved file in the host file manager. */
+  readonly reveal?: (image: ComfyImageReference) => Promise<void>
 }
 
 export type ImagesPanelProps = PropsRenderSlots<'images.prompt.activity' | 'images.agent' | 'images.agent.controls' | 'images.connection'> & InjectFace<ImagesInjected> & PropsLocale<typeof NS>
@@ -142,7 +148,7 @@ function errorMessage(error: unknown, fallback: string): string {
  * @returns A media card.
  */
 export function ImageCard({
-  generation, stored, image, deleting, selecting, selected, onSelect, load, onDelete, onReuse, onEdit, onAttach, onFrame, t,
+  generation, stored, image, deleting, selecting, selected, onSelect, load, onDelete, onReuse, onEdit, onAttach, onFrame, onReveal, t,
 }: {
   readonly generation?: ComfyGeneration
   readonly stored?: ComfyStoredImage
@@ -157,6 +163,7 @@ export function ImageCard({
   readonly onAttach?: ((image: ComfyImageReference) => void) | undefined
   readonly onReuse?: (generation: ComfyGeneration) => void
   readonly onEdit?: ((image: ComfyImageReference, generation: ComfyGeneration | undefined, src: string) => void) | undefined
+  readonly onReveal?: (() => void) | undefined
   readonly t: ImagesPanelProps['t']
 }): ReactNode {
   const [remoteSrc, setRemoteSrc] = useState<string>()
@@ -241,6 +248,7 @@ export function ImageCard({
           {onAttach !== undefined && <Button size="sm" onClick={() => { onAttach(image) }}>{t('action.addToChat')}</Button>}
           {generation !== undefined && !video && onReuse !== undefined && <Button size="sm" onClick={() => { onReuse(generation) }}>{t('action.reuse')}</Button>}
           {src !== undefined && !video && onEdit !== undefined && <Button size="sm" onClick={() => { onEdit(image, generation, src) }}>{t('action.editImage')}</Button>}
+          {onReveal !== undefined && <Button size="sm" variant="outline" onClick={() => { onReveal() }}>{t('action.showInExplorer')}</Button>}
           {src !== undefined && (
             <a className={css.download} href={stored === undefined ? src : mediaUrl(image)} download={image.filename}>
               <IconDownloadOutlineRegular size={14} />{t('action.download')}

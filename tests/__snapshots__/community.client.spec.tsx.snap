@@ -172,13 +172,29 @@ exports[`offers community installation without probing ComfyUI or creating a ses
               Drag into chat or add as a reference. Your originals stay intact.
             </p>
           </div>
-          <button
-            class="_button_4d2f85 _ghost_4d2f85 _md_4d2f85"
-            type="button"
+          <div
+            class="_mediaHeadingActions_554366"
           >
-            Select
-          </button>
+            <button
+              class="_button_4d2f85 _outline_4d2f85 _sm_4d2f85"
+              type="button"
+            >
+              Open folder
+            </button>
+            <button
+              class="_button_4d2f85 _ghost_4d2f85 _md_4d2f85"
+              type="button"
+            >
+              Select
+            </button>
+          </div>
         </div>
+        <p
+          class="_mediaFolder_554366"
+          title="C:\\media"
+        >
+          C:\\media
+        </p>
         <div
           class="_mediaCollections_554366"
         >

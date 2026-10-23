@@ -15,6 +15,7 @@ import type {} from '@deepseek-ai/dsh-client-ui-settings/client'
 import type { SessionReference } from '@deepseek-ai/dsh-api-session-controller/client'
 import type { SessionId } from '@deepseek-ai/dsh-api-remotes/client'
 import { createSnapshotStore } from '@deepseek-ai/dsh-client-store'
+import { revealMedia } from './folders.ts'
 import { isStillMediaType } from './media.ts'
 import { readImageRooms, type ImageRoomState } from './room-state.ts'
 import type { PromptContentPart } from '@deepseek-ai/dsh-api-session-controller/types'
@@ -299,6 +300,15 @@ export function apply(ctx: ClientContext): void {
     image: async (image: ComfyImageReference) => {
       const value = await unwrap(ctx.remote.comfyImages.image(image))
       return `data:${value.contentType};base64,${value.base64}`
+    },
+    readOutputFolder: async () => (await unwrap(ctx.remote.mcp.getComfyConnection())).outputDirectory,
+    saveOutputFolder: async (directory) => {
+      const current = await unwrap(ctx.remote.mcp.getComfyConnection())
+      await unwrap(ctx.remote.mcp.setComfyConnection({ ...current, outputDirectory: directory }))
+    },
+    reveal: async (image) => {
+      const connection = await unwrap(ctx.remote.mcp.getComfyConnection())
+      await revealMedia(connection.outputDirectory, image)
     },
   }
   ctx.slots.inject('main', () => ctx.slots.register({

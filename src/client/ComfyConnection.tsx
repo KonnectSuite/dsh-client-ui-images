@@ -6,6 +6,7 @@ import type { ComfyConnectionValue } from '@deepseek-ai/dsh-api-mcp-controller/t
 import type { ComfyServerControlResult } from '@deepseek-ai/dsh-api-comfyui-controller/types'
 import type { ComfyImagesStatus } from '@deepseek-ai/dsh-api-comfyui-controller/types'
 import { NS } from './locales.ts'
+import { openFolder, pickOutputFolder, readOutputFolders, type OutputFolderCandidate } from './folders.ts'
 import css from './ImagesPanel.module.css'
 
 /** Server availability and lifecycle transitions displayed by Images. */
@@ -50,6 +51,15 @@ export function ComfyConnection({ t, readConnection, testConnection, saveConnect
   const [statusRevision, setStatusRevision] = useState(0)
   const [serverState, setServerState] = useState<string>()
   const [serverError, setServerError] = useState<string>()
+  const [suggestion, setSuggestion] = useState<OutputFolderCandidate>()
+  useEffect(() => {
+    if (!open) return undefined
+    let disposed = false
+    void readOutputFolders().then((choices) => {
+      if (!disposed) setSuggestion(choices.candidates[0])
+    }).catch(() => { if (!disposed) setSuggestion(undefined) })
+    return () => { disposed = true }
+  }, [open])
   useEffect(() => { onServerState?.(phase) }, [onServerState, phase])
   useEffect(() => {
     if (readStatus === undefined) return undefined
@@ -102,6 +112,22 @@ export function ComfyConnection({ t, readConnection, testConnection, saveConnect
     catch (reason) { fail(reason) }
     finally { setPending(false) }
   }
+  const browse = async (): Promise<void> => {
+    setPending(true); setError(undefined)
+    try {
+      const result = await pickOutputFolder()
+      if (result.kind === 'picked') setSettings(current => current === undefined ? current : { ...current, outputDirectory: result.path })
+      else if (result.kind === 'unsupported') setError(t('gallery.folderPickerUnavailable'))
+    } catch (reason) { fail(reason) }
+    finally { setPending(false) }
+  }
+  const revealCurrent = async (): Promise<void> => {
+    /* v8 ignore next -- the button is disabled until the profile's connection loads. */
+    if (!settings) return
+    setError(undefined)
+    try { await openFolder(settings.outputDirectory.trim()) }
+    catch (reason) { fail(reason) }
+  }
   /* v8 ignore next -- the stylesheet always declares the class; the empty fallback only satisfies exactOptionalPropertyTypes. */
   const dialogClass = css.connectionDialog ?? ''
   const controls = <div className={css.serverActions}>
@@ -139,7 +165,15 @@ export function ComfyConnection({ t, readConnection, testConnection, saveConnect
           </select></label>
           <label>{t('connection.address')}<input type="url" disabled={pending} value={settings.baseUrl} onChange={(event) => { setSettings({ ...settings, baseUrl: event.target.value }); setTested(false) }} /></label>
           <label>{t('connection.folder')}<input disabled={pending} value={settings.outputDirectory} onChange={(event) => { setSettings({ ...settings, outputDirectory: event.target.value }) }} /></label>
+          <div className={css.folderRow}>
+            <Button variant="outline" disabled={pending} onClick={() => { void browse() }}>{t('connection.folderBrowse')}</Button>
+            <Button variant="outline" disabled={pending || settings.outputDirectory.trim() === ''} onClick={() => { void revealCurrent() }}>{t('connection.folderOpen')}</Button>
+          </div>
           <p>{t('connection.folderHint')}</p>
+          {suggestion !== undefined && settings.outputDirectory.trim() === '' && <p className={css.folderSuggestion}>
+            <span>{t('connection.folderDetected', { path: suggestion.path, count: suggestion.files })}</span>
+            <Button size="sm" disabled={pending} onClick={() => { setSettings({ ...settings, outputDirectory: suggestion.path }) }}>{t('connection.folderUseDetected')}</Button>
+          </p>}
         </>}
         <div role="status" aria-live="polite">{pending ? t('connection.pending') : tested ? t('connection.connected') : null}</div>
         {error && <p role="alert" className={css.error}>{error}</p>}
