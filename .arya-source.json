@@ -1,6 +1,6 @@
 {
   "repository": "KonnectSuite/AryaAI",
-  "commit": "5bced73f8a9ec3a21407f057e0f37e91d7d13521",
+  "commit": "de8a6f7301d47b2c3177739bea93ae4a9423e4d3",
   "path": "packages/client/ui-images",
   "build": "Build and test in the AryaAI workspace; lib files and resolved package metadata are copied from its packed artifact."
 }
